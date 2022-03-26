@@ -1,11 +1,9 @@
 
 
-
-
 # SET DESTINATION OF FILES
 
-system(str_glue("mkdir {dir_disk}/{domain}/"))
 dir_down_temp <- str_glue("{dir_disk}/{domain}/")
+dir.create(dir_down_temp)
 
 # *************************************************************************************************
 
@@ -47,17 +45,9 @@ if(str_detect(variable_data, "palmer", negate = T)){
       seq_along(files_to_down) %>%
         future_walk(function(f){
           
-          # print(str_glue("Downloading file {f} / {length(files_to_down)} ..."))
-          # tic("File downloaded")
-          
-          # system(str_glue("echo {p} | sudo -S gsutil cp gs://cmip5_data/RCM_regridded_data/REMO2015/{domain}/daily/{variable}/{files_to_down[f]} {here::here('data', 'down')}"))
-          
-          # system(str_glue("gsutil cp gs://cmip5_data/RCM_regridded_data/REMO2015/{domain}/daily/{variable}/{files_to_down[f]} {dir_down_temp}"))
-          
           file.copy(str_glue("{dir_bucket_risk}/RCM_regridded_data/REMO2015/{domain}/daily/{variable_data}/{files_to_down[f]}"),
                     dir_down_temp)
           
-          # toc()
         })
       toc()
     })
@@ -77,8 +67,5 @@ if(str_detect(variable_data, "palmer", negate = T)){
 }
 
 
-# rm(p)
-# 1/20
-# 100/((1/20)*100)
 
 

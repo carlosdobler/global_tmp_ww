@@ -3,7 +3,7 @@
 
 # **************************************************************************************************
 
-# INPUT SECTION
+# CHOOSE VARIABLE !!!
 
 variable <- c("mean_temp",
               "mean_precip",
@@ -31,16 +31,15 @@ func_get_time <- function()
 
 # *************************************************************************************************
 
-# process
 for(domain in c(
-  #"CAM",
-  #"AUS",
-  #"EUR",
-  #"WAS",
-  #"SEA",
-  #"SAM",
-  #"EAS",
-  #"CAS",
+  "CAM",
+  "AUS",
+  "EUR",
+  "WAS",
+  "SEA",
+  "SAM",
+  "EAS",
+  "CAS",
   "NAM",
   "AFR"
 )){
@@ -52,7 +51,7 @@ for(domain in c(
   
   source("scripts/11-remo-setup.R", echo = F, print.eval = T)
   source("scripts/12-remo-download.R", echo = F, print.eval = T)
-  source("scripts/13-remo-process.R", echo = F, print.eval = T)
+  source("scripts/13-0-remo-process.R", echo = F, print.eval = T)
   
   toc()
   
@@ -67,4 +66,5 @@ toc()
 
 # *************************************************************************************************
 
+# TURN OFF VM
 system("gcloud compute instances stop cd-ubuntu-1 --zone us-east1-c")

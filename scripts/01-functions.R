@@ -1,5 +1,7 @@
 
-# function dates ---------------------------------------------------------------
+# Create a vector of dates to assign to time dimension of star objects
+# vector based on model and start-end of the time-series
+
 func_dates <- function(mod, t_i, t_f)
 {
   if(str_detect(mod, "Had")){
@@ -31,8 +33,14 @@ func_dates <- function(mod, t_i, t_f)
 }
 
 
+# *************************************************************************************************
 
-# function GEV level maxl ----------------------------------------------------------
+
+# Fit a Generalized Extreme Value distribution to a vector of values
+# and obtain the 95th percentile (maximum likelihood method). Perform 
+# a Kolmogorov-Smirnov Test of the fit. Calculate the goodness of 
+# fit (quantiles-vs-quantiles)
+
 func_gev_level_maxl <- function(x)
 {
   
@@ -119,8 +127,13 @@ func_gev_level_maxl <- function(x)
 }
 
 
+# *************************************************************************************************
 
-# function GEV level lmom ----------------------------------------------------------
+# Fit a Generalized Extreme Value distribution to a vector of values
+# and obtain the 95th percentile (l-moments method). Perform 
+# a Kolmogorov-Smirnov Test of the fit. Calculate the goodness of 
+# fit (quantiles-vs-quantiles)
+
 func_gev_level_lmom <- function(x)
 {
   
@@ -208,8 +221,13 @@ func_gev_level_lmom <- function(x)
 }
 
 
+# *************************************************************************************************
 
-# function GEV exceedance maxl -----------------------------------------------------
+
+# Obtain the Exceedance Probability of a given value in relation to a vector of values
+# (maximum likelihood method). Perform a Kolmogorov-Smirnov Test of the fit. Calculate 
+# the goodness of fit (quantiles-vs-quantiles)
+
 func_gev_exceed_maxl <- function(x)
 {
   
@@ -245,8 +263,11 @@ func_gev_exceed_maxl <- function(x)
 }
 
 
+# *************************************************************************************************
 
-# function GEV exceedance lmom -----------------------------------------------------
+# Obtain the Exceedance Probability of a given value in relation to a vector of values
+# (l-moments method).
+
 func_gev_exceed_lmom <- function(x)
 {
   
@@ -286,7 +307,13 @@ func_gev_exceed_lmom <- function(x)
   }
 }
 
-# function BINOMIAL level maxl --------------------------------------------------- 
+
+# *************************************************************************************************
+
+# Fit a Binomial distribution to a vector of values and obtain the 
+# 95th percentile. Perform a Kolmogorov-Smirnov Test of the fit. 
+# Calculate the goodness of fit (quantiles-vs-quantiles)
+
 func_binom_level_maxl <- function(x, md, days_size)
 {
   
@@ -308,6 +335,7 @@ func_binom_level_maxl <- function(x, md, days_size)
     
     # obtain distr. parameters
     
+    # (no need)
     # try(
     #   fitdistrplus::fitdist(x,
     #                         dist = "binom",
@@ -316,6 +344,7 @@ func_binom_level_maxl <- function(x, md, days_size)
     #   silent = T
     #   ) -> params
     
+    # (same as above)
     if(md == 1){ # had: all months have 30 days
       
       mean(x/30) -> params
@@ -343,7 +372,7 @@ func_binom_level_maxl <- function(x, md, days_size)
     # }
     
     # new approach (jitter)
-    if(md == 1){
+    if(md == 1){ # had
       
       set.seed(123)
       qbinom(seq(0.01,0.99,0.01),
@@ -380,7 +409,7 @@ func_binom_level_maxl <- function(x, md, days_size)
               params)$p.value -> ks
     }
     
-    # chi square?
+    # alternative: chi square
     # tibble(z = x) %>% 
     #   count(z) %>% 
     #   {left_join(tibble(z = seq(0, days_in_month(m))), ., by = "z")} %>% 
@@ -429,13 +458,9 @@ func_binom_level_maxl <- function(x, md, days_size)
 }
 
 
-# function BINOMIAL exceedance maxl -----------------------------------------------------
+# *************************************************************************************************
 
-# s_deg %>% as_tibble() %>% filter(!is.na(var), month(time) == 2) %>% mutate(group_id = group_indices(., lon, lat)) %>% filter(group_id == 1) %>% pull(var) -> x
-# s_deg %>% as_tibble() %>% filter(!is.na(var), month(time) == 2) %>% mutate(group_id = group_indices(., lon, lat)) %>% filter(group_id == 1) %>% slice(1) %>% {c(.$lon, .$lat)} -> coor
-# s_level_deg1_mm %>% as_tibble() %>% filter(lon == coor[1], lat == coor[2])
-# func_binom_level_maxl(x, 2, s_deg_mth)[1]
-# c(as.double(x), func_binom_level_maxl(x, 2, s_deg_mth)[1]) %>% unname() -> x
+# Obtain the Exceedance Probability of a given value in relation to a vector of values.
 
 func_binom_exceed_maxl <- function(x, md, days_size){
   
@@ -504,7 +529,10 @@ func_binom_exceed_maxl <- function(x, md, days_size){
 }
 
 
-# function nbr stats -------------------------------------------------------------------------------
+# **************************************************************************************************
+
+# Calculate quintile breaks and n/bins per NBR
+
 func_nbrstats <- function(tb, tb_total_n_nbr){
   
   # Table of n/bins
