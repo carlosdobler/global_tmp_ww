@@ -5,7 +5,7 @@ variable <- c("mean_temp",
               "extr_maxtemp",
               "extr_wetbulbtemp",
               "extr_fwi",
-              "extr_cdd")[7]
+              "extr_cdd")[3]
 
 # ******************************************************************************
 
@@ -250,7 +250,8 @@ case_when(variable == "mean_temp" ~ "1. Mean temperature",
           variable == "extr_drought" ~ "8. Extreme drought") -> variable_title
 
 ggplot(stats_2, aes(y = quantile, x = month, fill = cor)) +
-  geom_tile() +
+  geom_tile(show.legend = F) +
+  geom_label(aes(label = round(cor,2)), fill = "white", alpha = 0.6, size = 2.6) +
   scale_fill_continuous_sequential(palette = "Viridis", name = "Pearson's r") +
   theme(axis.title.x = element_blank()) +
   labs(title = variable_title, 
